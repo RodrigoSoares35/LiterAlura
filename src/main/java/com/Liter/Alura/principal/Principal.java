@@ -20,21 +20,21 @@ public class Principal {
     private AutorRepository autorRepositorio;
 
 
-    public Principal(LivroRepository repositorio, AutorRepository autorRepositorio ) {
+    public Principal(LivroRepository repositorio, AutorRepository autorRepositorio) {
         this.repositorio = repositorio;
         this.autorRepositorio = autorRepositorio;
     }
 
     public void exibeMenu() {
         var opcao = -1;
-        while(opcao != 0) {
+        while (opcao != 0) {
             var menu = """
-                       
+                    
                        Bem Vindo a Biblioteca Virtual!
-                       
+                    
                                  Menu
-                    1 - Buscar Livro
-                    2 - Listar Livros Cadastrados
+                    1 - Buscar Livro - OK
+                    2 - Listar Livros Cadastrados - OK
                     3 - Listar Autores Cadastrados
                     4 - Listar Autores Vivos em um determinado ano
                     5 - Listar Livros em um determinado Idioma
@@ -55,26 +55,26 @@ public class Principal {
                     listarLivro();
                     break;
                 case 3:
-                 //   buscarAutores();
+                    buscarAutores();
                     break;
                 case 4:
                     System.out.println("Informe o Ano:");
-                    int  ano = leitura.nextInt();
+                    int ano = leitura.nextInt();
                     leitura.nextLine();
-                  //  listarAutoresVivosNoAno(ano);
+                     listarAutoresVivosNoAno(ano);
                     break;
                 case 5:
-                     var  menu2 = """
-                       Buscar livro por um Idioma
-                    pt - Português
-                    en - Inglês
-                    es - Espanhol
-                    fr - Francês
-                    Escolha uma Opção:                           
-                    """;
+                    var menu2 = """
+                               Buscar livro por um Idioma
+                            pt - Português
+                            en - Inglês
+                            es - Espanhol
+                            fr - Francês
+                            Escolha uma Opção:
+                            """;
                     System.out.println(menu2);
                     var idioma = leitura.nextLine();
-                //    listarLivrosPorIdioma(idioma);
+                     listarLivrosPorIdioma(idioma);
 
                     break;
 
@@ -120,10 +120,10 @@ public class Principal {
             repositorio.save(livro);
 
             System.out.println("-----------Livro------------");
-            System.out.println("Titulo:"+ dadoslivro.titulo());
-            System.out.println("Autor:"+ dadoslivro.autor().get(0).name());
-            System.out.println("Idioma:"+ dadoslivro.idiomas());
-            System.out.println("Número de Downloand:"+ dadoslivro.numeroDow());
+            System.out.println("Titulo:" + dadoslivro.titulo());
+            System.out.println("Autor:" + dadoslivro.autor().get(0).name());
+            System.out.println("Idioma:" + dadoslivro.idiomas());
+            System.out.println("Número de Downloand:" + dadoslivro.numeroDow());
             System.out.println();
             System.out.println("Livro e autor salvos com sucesso!");
 
@@ -133,18 +133,16 @@ public class Principal {
             System.out.println("Erro inesperado: " + e.getMessage());
         }
     }
+
     private DadosLivro getDadosLivro() {
         System.out.println("Digite o nome do livro para busca:");
         var nomeLivro = leitura.nextLine();
 
-        // Chama a API com o nome do livro
         var json = consumo.obterDados(ENDERECO + nomeLivro.replace(" ", "+"));
 
-        // Converte o JSON para DadosApi (que contém lista de DadosLivro)
+
         DadosApi dadosApi = conversor.obterDados(json, DadosApi.class);
 
-
-        // Retorna o primeiro resultado se houver
         if (dadosApi.results() != null && !dadosApi.results().isEmpty()) {
             return dadosApi.results().get(0);
 
@@ -153,109 +151,125 @@ public class Principal {
             return null;
         }
     }
-    private void listarLivro(){
+
+    private void listarLivro() {
         List<Livro> livros = repositorio.findAll();
         System.out.println("------Lista de Livros-------");
         System.out.println();
         for (Livro livro : livros) {
             System.out.println("-------- --Livro-------=----");
-            System.out.println("Titulo:"+ livro.getTitulo());
-            System.out.println("Autor:"+ (livro.getAutor() != null ? livro.getAutor().getNomeAutor() : "Não informado"));
-            System.out.println("Idioma:"+ livro.getIdioma());
-            System.out.println("Numero de Downloand:"+ livro.getNumeroDow());
+            System.out.println("Titulo:" + livro.getTitulo());
+            System.out.println("Autor:" + (livro.getAutor()));
+            System.out.println("Idioma:" + livro.getIdioma());
+            System.out.println("Numero de Downloand:" + livro.getNumeroDow());
             System.out.println("----------------------------");
             System.out.println();
         }
     }
 
-//    private void buscarLivroWeb() {
-//        try {
-//            DadosLivro dadoslivro = getDadosLivro();
-//
-//            Livro livro = new Livro(dadoslivro);
-//            repositorio.save(livro);
-//            System.out.println(dadoslivro);
-//        } catch (NullPointerException e) {
-//
-//        } catch (Exception e) {
-//            System.out.println("Erro inesperado: " + e.getMessage());
-//        }
-//    }
-//    private DadosLivro getDadosLivro() {
-//
-//        System.out.println("Informe o nome do Livro para busca:");
-//        var nomeLivro = leitura.nextLine();
-//        var json = consumo.obterDados(ENDERECO + nomeLivro.replace(" ", "+") );
-//        DadosApi dadosApi = conversor.obterDados(json, DadosApi.class);
-//
-//        if (dadosApi.results() != null && !dadosApi.results().isEmpty()) {
-//            return dadosApi.results().get(0);
-//        } else {
-//            System.out.println("Nenhum livro encontrado!");
-//            return null;
-//        }
-//
-//    }
+    private void buscarAutores() {
+        List<Autor> autores = autorRepositorio.findAutores();
+        System.out.println("-----Autores Cadastrados-------");
+        System.out.println();
+        for (Autor autor : autores) {
+            System.out.println("Autor: " + autor.getNomeAutor());
+            System.out.println("Nascimento: " + autor.getAnoNasc());
+            System.out.println("Falecimento: " + autor.getAnoMorte());
 
-//    private void listarLivro(){
-//        List<Livro> livros = repositorio.findAll();
-//        for (Livro livro : livros) {
-//            System.out.println(livro);
-//        }
-//    }
-//    private void buscarAutores() {
-//
-//        List<String> autores = repositorio.findNomeAutor();
-//
-//        System.out.println("----Lista de todos os Atores ----");
-//        for (String autor : autores) {
-//            System.out.println("");
-//            System.out.println(" Nome: " + autor);
-//        }
-//    }
-//    public void listarAutoresVivosNoAno(int ano) {
-//
-//        List<String> autores = repositorio.findAutoresVivosNoAno(ano);
-//        if (autores.isEmpty()) {
-//            System.out.println("Nenhum autor vivo encontrado no ano de " + ano);
-//        } else {
-//            System.out.println("Autores vivos no ano de " + ano + ":");
-//            System.out.println("");
-//            autores.forEach(System.out::println);
-//        }
-//    }
-//    public void listarLivrosPorIdioma(String idioma) {
-//        List<Livro> livros = repositorio.findByIdioma(idioma);
-//        if (livros.isEmpty()) {
-//            System.out.println("Nenhum livro encontrado no idioma: " + idioma);
-//        }
-//        if (idioma.equalsIgnoreCase("pt")){
-//            System.out.println("Livros no idioma Português:");
-//            System.out.println("");
-//            livros.forEach(l -> System.out.println("Livro:"+ l.getTitulo() + "\n" +
-//                                                        "Autor:" + l.getNomeAutor() + "\n"));
-//
-//        }
-//        if (idioma.equalsIgnoreCase("en")) {
-//            System.out.println("Livros no idioma Inglês:");
-//            System.out.println("");
-//            livros.forEach(l -> System.out.println("Livro:"+ l.getTitulo() + "\n" +
-//                                                        "Autor:" + l.getNomeAutor() + "\n"));
-//        }
-//        if (idioma.equalsIgnoreCase("es")) {
-//            System.out.println("Livros no idioma Espanhol:");
-//            System.out.println("");
-//            livros.forEach(l -> System.out.println("Livro:"+ l.getTitulo() + "\n" +
-//                                                        "Autor:" + l.getNomeAutor() + "\n"));
-//        }
-//        if (idioma.equalsIgnoreCase("fr")) {
-//            System.out.println("Livros no idioma Francês:");
-//            System.out.println("");
-//            livros.forEach(l -> System.out.println("Livro:"+ l.getTitulo() + "\n" +
-//                                                        "Autor:" + l.getNomeAutor() + "\n"));
-//        }
-//    }
-//
-//
+            System.out.print("Livros: ");
+            if (autor.getLivros() != null && !autor.getLivros().isEmpty()) {
+                for (Livro livro : autor.getLivros()) {
+                    System.out.print(livro.getTitulo() + ", ");
+                    System.out.println();
+                }
+                System.out.println();
+            }
+        }
+    }
+        public void listarAutoresVivosNoAno(int ano) {
+            List<Autor> autores = autorRepositorio.findAutoresVivosNoAno(ano);
+                 System.out.println("Autores Vivos no ano de " + ano);
+                 System.out.println();
+            for (Autor autor : autores) {
+                System.out.println("Autor: " + autor.getNomeAutor());
+                System.out.println("Nascimento: " + autor.getAnoNasc());
+                System.out.println("Falecimento: " + autor.getAnoMorte());
+
+                if (autor.getLivros() != null && !autor.getLivros().isEmpty()) {
+                    for (Livro livro : autor.getLivros()) {
+                        System.out.println("Título do livro: " + livro.getTitulo());
+                    }
+                }
+                System.out.println("------------------------------------");
+            }
+        }
+
+    public void listarLivrosPorIdioma(String idioma) {
+        List<Livro> livrosIdioma = repositorio.findByIdioma(idioma);
+        if (livrosIdioma.isEmpty()) {
+            System.out.println("Nenhum livro encontrado no idioma: " + idioma);
+        }
+        if (idioma.equalsIgnoreCase("pt")){
+            System.out.println("Livros no idioma Português:");
+            System.out.println();
+            livrosIdioma.forEach(l -> {
+                    Autor autor = l.getAutor();
+                    String autorStr = autor != null
+                            ? autor.getNomeAutor() : "Autor não informado";
+
+                    System.out.println("Titulo: " + l.getTitulo());
+                    System.out.println("Autor: " + autorStr);
+                    System.out.println("Idioma: " + l.getIdioma());
+                    System.out.println("Numero de Downloads: " + l.getNumeroDow());
+                    System.out.println("-----------------------------------");
+                });
+
+        }
+        if (idioma.equalsIgnoreCase("en")) {
+            System.out.println("Livros no idioma Inglês:");
+            System.out.println();
+            livrosIdioma.forEach(l -> {
+                Autor autor = l.getAutor();
+                String autorStr = autor != null
+                        ? autor.getNomeAutor() : "Autor não informado";
+
+                System.out.println("Titulo: " + l.getTitulo());
+                System.out.println("Autor: " + autorStr);
+                System.out.println("Idioma: " + l.getIdioma());
+                System.out.println("Numero de Downloads: " + l.getNumeroDow());
+                System.out.println("-----------------------------------");
+            });
+        }
+        if (idioma.equalsIgnoreCase("es")) {
+            System.out.println("Livros no idioma Espanhol:");
+            System.out.println();
+            livrosIdioma.forEach(l -> {
+                Autor autor = l.getAutor();
+                String autorStr = autor != null
+                        ? autor.getNomeAutor() : "Autor não informado";
+
+                System.out.println("Titulo: " + l.getTitulo());
+                System.out.println("Autor: " + autorStr);
+                System.out.println("Idioma: " + l.getIdioma());
+                System.out.println("Numero de Downloads: " + l.getNumeroDow());
+                System.out.println("-----------------------------------");
+            });
+        }
+        if (idioma.equalsIgnoreCase("fr")) {
+            System.out.println("Livros no idioma Francês:");
+            System.out.println();
+            livrosIdioma.forEach(l -> {
+                Autor autor = l.getAutor();
+                String autorStr = autor != null
+                        ? autor.getNomeAutor() : "Autor não informado";
+
+                System.out.println("Titulo: " + l.getTitulo());
+                System.out.println("Autor: " + autorStr);
+                System.out.println("Idioma: " + l.getIdioma());
+                System.out.println("Numero de Downloads: " + l.getNumeroDow());
+                System.out.println("-----------------------------------");
+            });
+        }
+    }
 
 }

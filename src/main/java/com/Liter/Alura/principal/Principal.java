@@ -6,6 +6,7 @@ import com.Liter.Alura.repository.LivroRepository;
 import com.Liter.Alura.service.ConsumoApi;
 import com.Liter.Alura.service.ConverteDados;
 
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -58,13 +59,21 @@ public class Principal {
                     buscarAutores();
                     break;
                 case 4:
-                    System.out.println("Informe o Ano:");
-                    int ano = leitura.nextInt();
-                    leitura.nextLine();
-                     listarAutoresVivosNoAno(ano);
+                    try {
+                        System.out.println("Informe o Ano:");
+                        int ano = leitura.nextInt();
+                        leitura.nextLine();
+                        listarAutoresVivosNoAno(ano);
+
+                      }catch (InputMismatchException e) {
+                        System.out.println("Informe um Ano Valido ex:AAAA!" );
+                        leitura.nextLine();
+                    }
+
                     break;
                 case 5:
-                    var menu2 = """
+
+                    var menuIdioma = """
                                Buscar livro por um Idioma
                             pt - Português
                             en - Inglês
@@ -72,9 +81,16 @@ public class Principal {
                             fr - Francês
                             Escolha uma Opção:
                             """;
-                    System.out.println(menu2);
-                    var idioma = leitura.nextLine();
-                     listarLivrosPorIdioma(idioma);
+
+                        System.out.println(menuIdioma);
+                        var idioma = leitura.nextLine();
+
+                        if (!idioma.equalsIgnoreCase("pt") && !idioma.equalsIgnoreCase("en") &&
+                                !idioma.equalsIgnoreCase("es") && !idioma.equalsIgnoreCase("fr")) {
+                            System.out.println("Informe uma opção Valida!");
+                        } else {
+                            listarLivrosPorIdioma(idioma);
+                        }
 
                     break;
 
@@ -96,8 +112,6 @@ public class Principal {
 
             if (dadoslivro.autor() != null && !dadoslivro.autor().isEmpty()) {
                 DadosAutor dadosAutor = dadoslivro.autor().get(0);
-
-                // Buscar autor no banco pelo nome
                 Optional<Autor> autorExistente = autorRepositorio.findByNomeAutor(dadosAutor.name());
 
                 if (autorExistente.isPresent()) {
@@ -135,12 +149,11 @@ public class Principal {
     }
 
     private DadosLivro getDadosLivro() {
+
         System.out.println("Digite o nome do livro para busca:");
         var nomeLivro = leitura.nextLine();
 
         var json = consumo.obterDados(ENDERECO + nomeLivro.replace(" ", "+"));
-
-
         DadosApi dadosApi = conversor.obterDados(json, DadosApi.class);
 
         if (dadosApi.results() != null && !dadosApi.results().isEmpty()) {
@@ -187,9 +200,11 @@ public class Principal {
         }
     }
         public void listarAutoresVivosNoAno(int ano) {
+
+
             List<Autor> autores = autorRepositorio.findAutoresVivosNoAno(ano);
-                 System.out.println("Autores Vivos no ano de " + ano);
-                 System.out.println();
+            System.out.println("Autores Vivos no ano de " + ano);
+            System.out.println();
             for (Autor autor : autores) {
                 System.out.println("Autor: " + autor.getNomeAutor());
                 System.out.println("Nascimento: " + autor.getAnoNasc());

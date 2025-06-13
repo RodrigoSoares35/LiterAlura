@@ -34,8 +34,8 @@ public class Principal {
                        Bem Vindo a Biblioteca Virtual!
                     
                                  Menu
-                    1 - Buscar Livro - OK
-                    2 - Listar Livros Cadastrados - OK
+                    1 - Buscar Livro 
+                    2 - Listar Livros Cadastrados 
                     3 - Listar Autores Cadastrados
                     4 - Listar Autores Vivos em um determinado ano
                     5 - Listar Livros em um determinado Idioma

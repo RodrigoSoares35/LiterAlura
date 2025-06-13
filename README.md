@@ -14,19 +14,19 @@ O sistema foi desenvolvido para fazer uma buscar de titulos de livros em uma API
  - Listar Livros em um determinado Idioma
 ## Prints de Tela 📸
 
-- Buscar Livro.
+## Buscar Livro.
 ![alt text](image.png)
 
-- Listar Livros Cadastrados
+## Listar Livros Cadastrados
 ![alt text](image-1.png)
 
-- Listar Autores Cadastrados
+## Listar Autores Cadastrados
 ![alt text](image-2.png)
 
-- Listar Autores vivos por Ano.
+## Listar Autores vivos por Ano.
 ![alt text](image-3.png)
 
-- Listar livros por Idioma.
+## Listar livros por Idioma.
 ![alt text](image-4.png)
 
 ## Tecnologias Utilizadas 💻

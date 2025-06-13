@@ -1,7 +1,7 @@
 # Projeto Educacional LiterAlura 📚
 
 ## Introdução 🖋️
-Sistema com consumo de uma  API para buscar na WEb titulos de Livros em varios idiomas.
+Sistema com consumo de uma  API para buscar na internet titulos de Livros em varios idiomas.
 
 ## Objetivo 🎯
 O sistema foi desenvolvido para fazer uma buscar de titulos de livros em uma API que contém mais de 70.000 livros. Cada busca traz informações relevantes sobre cada Livro, por exemplo: Titulo, autor, Nascimento, falecimento e total de downloand. 
